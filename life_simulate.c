@@ -52,6 +52,7 @@ uint8_t *simulate_life(uint32_t grid_dim, start_coord_t *initial_points, uint32_
 	// 	grid = malloc(256);
 	// }
 	// char **local_grid = (char **)grid;
+	char			res[16][16];
 	char			*grid;
 	int				counter;
 	start_coord_t	cpy_init;
@@ -60,11 +61,8 @@ uint8_t *simulate_life(uint32_t grid_dim, start_coord_t *initial_points, uint32_
 	int				ngb;
 
 	// int				iteration = 0;
-
-	grid = malloc(grid_dim * sizeof(char *));
 	if (!grid)
 		OutputDebugStringA("malloc error in grid");
-		
 	grid = malloc(grid_dim * grid_dim);
 	for (int x = 0; x < grid_dim; x++)
 	{
@@ -81,9 +79,9 @@ uint8_t *simulate_life(uint32_t grid_dim, start_coord_t *initial_points, uint32_
 
 		grid[(cpy_init.x * grid_dim) + cpy_init.y] = '1';
 	}
-	for (int rows = 3; rows < 7; rows++)
+	for (int rows = 0; rows < grid_dim; rows++)
 	{
-		for (int cols = 3; cols < 7; cols++)
+		for (int cols = 0; cols < grid_dim; cols++)
 		{
 			cpy_init.x = rows;
 			cpy_init.y = cols;
@@ -105,6 +103,13 @@ uint8_t *simulate_life(uint32_t grid_dim, start_coord_t *initial_points, uint32_
 			}
 		}
 	}
-	return (grid);
+	for (int i = 0 ; i < grid_dim; i++)
+	{
+		for (int j = 0; j < grid_dim; j++)
+		{
+			res[i][j] = grid[i * grid_dim + j];
+		}
+	}
+	return (res);
 }
 
