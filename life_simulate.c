@@ -1,24 +1,11 @@
-#pragma warning(push, 0)
-#include <stdint.h>
-
-#define WIN32_LEAN_AND_MEAN
-#define UNICODE
-#include <windows.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
-#pragma(pop)
-
-#pragma warning(disable :5045)
+#include <string.h>
+#include "life_simulate.h"
 
 int		is_malloced = 0;
 uint8_t	*grid;
-
-typedef struct start_coord_s
-{
-	uint32_t x;
-	uint32_t y;
-} start_coord_t;
 
 int	count_alive_neigb(start_coord_t cur_coord, int max_dim, uint8_t *grid)
 {
@@ -46,65 +33,72 @@ int	count_alive_neigb(start_coord_t cur_coord, int max_dim, uint8_t *grid)
 
 uint8_t *simulate_life(uint32_t grid_dim, start_coord_t *initial_points, uint32_t initial_point_count)
 {
-
-	// if (!is_malloced)
-	// {
-	// 	is_malloced = 1;
-	// 	grid = malloc(256);
-	// }
-	// char **local_grid = (char **)grid;
-	// char			res[16][16]
-	int				counter;
+	uint32_t		counter;
 	start_coord_t	cpy_init;
-	int				ngb;
 
-	// int				iteration = 0;
 	if (!is_malloced)
 	{
 		grid = malloc(grid_dim * grid_dim);
 		is_malloced = 1;
 	}
-	grid = memset(grid, 0, grid_dim * grid_dim);
-	ngb = 0;
-	counter = -1;
-	while (++counter < initial_point_count)
+	memset(grid, 0, grid_dim * grid_dim);
+	
+	counter = 0;
+	while (counter < initial_point_count)
 	{
 		cpy_init = initial_points[counter];
-
 		grid[(cpy_init.x * grid_dim) + cpy_init.y] = 1;
+		counter++;
 	}
-	for (int cols = 0; cols < grid_dim; cols++)
+	
+	return (grid);
+}
+
+uint8_t *step_life(uint32_t grid_dim)
+{
+	start_coord_t	cpy_init;
+	int				ngb;
+	uint8_t			*new_grid;
+	
+	if (!is_malloced || !grid)
+		return NULL;
+	
+	new_grid = malloc(grid_dim * grid_dim);
+	memset(new_grid, 0, grid_dim * grid_dim);
+	
+	for (uint32_t cols = 0; cols < grid_dim; cols++)
 	{
-		for (int rows = 0; rows < grid_dim; rows++)
+		for (uint32_t rows = 0; rows < grid_dim; rows++)
 		{
 			cpy_init.x = cols;
 			cpy_init.y = rows;
 			ngb = count_alive_neigb(cpy_init, grid_dim, grid);
 			if (grid[(cols * grid_dim) + rows] == 1)
 			{
-				if ((ngb >= 2 && ngb <= 3))
-					continue;
-				else
-				{
-					grid[(cpy_init.x * grid_dim) + cpy_init.y] = 0;
-					continue;
-				}
+				if (ngb >= 2 && ngb <= 3)
+					new_grid[(cols * grid_dim) + rows] = 1;
 			}
 			else
 			{
 				if (ngb == 3)
-					grid[(cpy_init.x * grid_dim) + cpy_init.y] = 1;
+					new_grid[(cols * grid_dim) + rows] = 1;
 			}
 		}
 	}
-	// is_malloced = 0;
-	// for (int i = 0 ; i < grid_dim; i++)
-	// {
-	// 	for (int j = 0; j < grid_dim; j++)
-	// 	{
-	// 		res[i][j] = grid[i * grid_dim + j];
-	// 	}
-	// }
+	
+	memcpy(grid, new_grid, grid_dim * grid_dim);
+	free(new_grid);
+	
 	return (grid);
+}
+
+void cleanup_life(void)
+{
+	if (is_malloced && grid)
+	{
+		free(grid);
+		grid = NULL;
+		is_malloced = 0;
+	}
 }
 
