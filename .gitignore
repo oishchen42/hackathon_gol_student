@@ -1,0 +1,17 @@
+# Build artifacts
+*.o
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.rdi
+game_of_life
+
+# Editor files
+.vscode/
+*.swp
+*.swo
+*~
+
+# Windows specific
+vc140.pdb
