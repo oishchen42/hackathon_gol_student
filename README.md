@@ -22,7 +22,7 @@ These simple rules create surprisingly complex patterns and behaviors!
 
 ```
 hackathon_gol_student/
-├── life_simulate.c      # Core simulation logic (YOUR CODE HERE)
+├── life_simulate.c      # Core simulation logic (optimize this!)
 ├── life_main.obj        # Main program entry point (pre-compiled)
 ├── life_renderer.obj    # Rendering engine (pre-compiled)
 ├── build_debug.bat      # Debug build script
@@ -37,7 +37,7 @@ The `life_simulate.c` file contains the `simulate_life()` function which:
 - Computes one generation/iteration of the Game of Life
 - Returns a pointer to the updated grid state
 
-The `count_alive_neigb()` function counts the number of alive neighbors for any given cell, considering edge cases at grid boundaries.
+The `count_alive_neigb()` helper function counts the number of alive neighbors for any given cell, considering edge cases at grid boundaries. (Note: the function name contains a typo in "neigb" which is short for "neighbors")
 
 ## 🚀 Setup
 
